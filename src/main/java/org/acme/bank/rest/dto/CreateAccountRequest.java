@@ -1,29 +1,18 @@
 package org.acme.bank.rest.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class CreateAccountRequest {
     private Integer type_account;
 
     private Long idUsers;
-
-    public Long getIdUsers() {
-        return idUsers;
-    }
-
-    public void setIdUsers(Long idUsers) {
-        this.idUsers = idUsers;
-    }
-
-
-    public Integer getType_account() {
-        return type_account;
-    }
-
-    public void setType_account(Integer type_account) {
-        this.type_account = type_account;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

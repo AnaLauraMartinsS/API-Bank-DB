@@ -1,40 +1,31 @@
 package org.acme.bank.rest.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Objects;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class CreateUserRequest {
     private String name;
     private Integer age;
     private String address;
     private String phone;
+    private String AccountTypeEnum;
 
-    public String getName() {
-        return name;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CreateUserRequest that = (CreateUserRequest) o;
+        return Objects.equals(name, that.name) && Objects.equals(age, that.age) && Objects.equals(address, that.address) && Objects.equals(phone, that.phone) && Objects.equals(AccountTypeEnum, that.AccountTypeEnum);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age, address, phone, AccountTypeEnum);
     }
 }

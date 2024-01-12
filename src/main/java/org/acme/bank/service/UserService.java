@@ -7,7 +7,7 @@ import org.acme.bank.rest.dto.CreateUserRequest;
 @ApplicationScoped
 public class UserService {
 
-    public User createUser(CreateUserRequest CreateUserRequest){
+    public User createUser(CreateUserRequest CreateUserRequest) {
         User user = new User();
         user.setName(CreateUserRequest.getName());
         user.setAge(CreateUserRequest.getAge());
@@ -15,6 +15,9 @@ public class UserService {
         user.setAddress(CreateUserRequest.getAddress());
 
         user.persist();
+        String successMessage = "Usuário criado com sucesso! " + toString();
+        System.out.println(successMessage);
         return user;
     }
 }
+

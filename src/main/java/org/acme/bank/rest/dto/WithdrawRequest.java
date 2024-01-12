@@ -9,22 +9,21 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DepositRequest {
+public class WithdrawRequest {
 
     private Long idAccount;
-    private double value;
-
+    private double valueWithdraw;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DepositRequest that = (DepositRequest) o;
-        return Double.compare(value, that.value) == 0 && Objects.equals(idAccount, that.idAccount);
+        WithdrawRequest that = (WithdrawRequest) o;
+        return Double.compare(valueWithdraw, that.valueWithdraw) == 0 && Objects.equals(idAccount, that.idAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAccount, value);
+        return Objects.hash(idAccount, valueWithdraw);
     }
 }
