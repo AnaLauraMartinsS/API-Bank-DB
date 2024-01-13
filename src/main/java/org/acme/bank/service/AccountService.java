@@ -2,11 +2,16 @@ package org.acme.bank.service;
 
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.Response;
+import org.acme.bank.AccountTypeEnum;
+import org.acme.bank.controller.dto.DetailsRequest;
+import org.acme.bank.dao.User;
 import org.acme.bank.exceptions.InvalidAccountException;
-import org.acme.bank.model.Account;
-import org.acme.bank.rest.dto.CreateAccountRequest;
-import org.acme.bank.rest.dto.DepositRequest;
-import org.acme.bank.rest.dto.WithdrawRequest;
+import org.acme.bank.dao.Account;
+import org.acme.bank.controller.dto.CreateAccountRequest;
+import org.acme.bank.controller.dto.DepositRequest;
+import org.acme.bank.controller.dto.WithdrawRequest;
+import org.acme.bank.responses.AccountResponse;
 
 @ApplicationScoped
 public class AccountService {
@@ -17,6 +22,7 @@ public class AccountService {
             throw new InvalidAccountException("Erro ao criar conta. A conta não pode ser inicializada corretamente.");
         }
 
+        //AccountTypeEnum accountTypeEnum = AccountTypeEnum.fromCode(accountRequest.getType_account());
         account.setType_account(accountRequest.getType_account());
         account.setIdUsers(accountRequest.getIdUsers());
 
@@ -64,6 +70,23 @@ public class AccountService {
         System.out.println(successMessage);
 
         return successMessage;
+    }
+
+    public AccountResponse details(DetailsRequest detailsRequest) throws InvalidAccountException {
+        Account account = Account.findById(detailsRequest.getAccountId());
+
+        if (account == null) {
+            throw new InvalidAccountException("A conta não existe!");
+        }
+
+        AccountResponse accountResponse = new AccountResponse();
+        AccountTypeEnum accountTypeEnum = AccountTypeEnum.fromCode(account.getType_account());
+        User user = User.findById(account.getIdUsers());
+        accountResponse.setId(account.getId());
+        accountResponse.setTypeAccount(accountTypeEnum.getName());
+        accountResponse.setBalance(account.getBalance());
+        accountResponse.setUser(user);
+        return accountResponse;
     }
 
 

@@ -1,8 +1,8 @@
 package org.acme.bank.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.acme.bank.model.User;
-import org.acme.bank.rest.dto.CreateUserRequest;
+import org.acme.bank.dao.User;
+import org.acme.bank.controller.dto.CreateUserRequest;
 
 @ApplicationScoped
 public class UserService {

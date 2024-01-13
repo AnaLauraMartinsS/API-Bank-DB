@@ -1,4 +1,4 @@
-package org.acme.bank.model;
+package org.acme.bank.dao;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package org.acme.bank.rest;
+package org.acme.bank.controller;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -8,18 +8,17 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.acme.bank.AccountTypeEnum;
+import org.acme.bank.controller.dto.*;
 import org.acme.bank.exceptions.InvalidAccountException;
-import org.acme.bank.model.Account;
-import org.acme.bank.model.User;
-import org.acme.bank.rest.dto.CreateAccountRequest;
-import org.acme.bank.rest.dto.CreateUserRequest;
-import org.acme.bank.rest.dto.DepositRequest;
-import org.acme.bank.rest.dto.WithdrawRequest;
+import org.acme.bank.dao.Account;
+import org.acme.bank.dao.User;
+import org.acme.bank.responses.AccountResponse;
 import org.acme.bank.service.AccountService;
 import org.acme.bank.service.UserService;
 
 
-@Path("/users")
+@Path("api/v1/users")
 @ApplicationScoped
 public class UserResource {
 
@@ -44,13 +43,24 @@ public class UserResource {
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Account createAccount (CreateAccountRequest accountRequest) {
-        Account account = new Account();
-        account.setType_account(accountRequest.getType_account());
-        account.setIdUsers(accountRequest.getIdUsers());
+    public Response createAccount(CreateAccountRequest accountRequest) {
+       try{
+          Account account = accountService.createAccount(accountRequest);
 
-        account.persist();
-        return account;
+           AccountTypeEnum accountTypeEnum = AccountTypeEnum.fromCode(account.getType_account());
+
+           User user = User.findById(account.getIdUsers());
+
+           AccountResponse accountResponse = new AccountResponse();
+           accountResponse.setId(account.getId());
+           accountResponse.setTypeAccount(accountTypeEnum.getName());
+           accountResponse.setUser(user);
+           accountResponse.setBalance(account.getBalance());
+
+           return Response.ok(accountResponse).build();
+       } catch(Exception exception) {
+           return Response.status(400, exception.getMessage()).build();
+       }
     }
 
     @POST
@@ -76,18 +86,28 @@ public class UserResource {
         try {
             String result = accountService.withdraw(withdrawRequest);
             return Response.ok(result).build();
-        } catch (InvalidAccountException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (InvalidAccountException exception) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();
         }
     }
-
-//    @GET
-//    @Path("listAccounts")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response listAllAccount(){
-//
-//    }
-//
+    @GET
+    @Path("listAccount")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response listAllAccount() {
+        PanacheQuery<PanacheEntityBase> query = Account.findAll();
+        return Response.ok(query.list()).build();
+    }
+    @GET
+    @Path("details")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response listUser(DetailsRequest detailsRequest){
+        try{
+            AccountResponse accountResponse = accountService.details(detailsRequest);
+            return Response.ok(accountResponse).build();
+        }catch (InvalidAccountException exception){
+            return Response.status(400,exception.getMessage()).build();
+        }
+    }
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
