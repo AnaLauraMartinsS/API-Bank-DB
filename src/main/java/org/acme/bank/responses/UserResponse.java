@@ -14,6 +14,6 @@ public class UserResponse {
     private Integer age;
     private String address;
     private String phone;
-    private Account account; // achei tendência do próximo verão
+    private Account account;
 
 }

@@ -2,7 +2,6 @@ package org.acme.bank.service;
 
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.core.Response;
 import org.acme.bank.AccountTypeEnum;
 import org.acme.bank.controller.dto.DetailsRequest;
 import org.acme.bank.dao.User;
@@ -21,8 +20,6 @@ public class AccountService {
         if (account == null) {
             throw new InvalidAccountException("Erro ao criar conta. A conta não pode ser inicializada corretamente.");
         }
-
-        //AccountTypeEnum accountTypeEnum = AccountTypeEnum.fromCode(accountRequest.getType_account());
         account.setType_account(accountRequest.getType_account());
         account.setIdUsers(accountRequest.getIdUsers());
 
@@ -53,8 +50,6 @@ public class AccountService {
         if (account == null) {
             throw new InvalidAccountException("Conta inválida! \nPor favor, certifique-se que o nº da conta está correto!!");
         }
-
-        // Verificando se há saldo suficiente para o saque
         double currentBalance = account.getBalance();
         double withdrawAmount = withdrawRequest.getValueWithdraw();
 
@@ -62,7 +57,6 @@ public class AccountService {
             throw new InvalidAccountException("Saldo insuficiente para realizar o saque!");
         }
 
-        // Atualização do saldo após o saque
         account.setBalance(currentBalance - withdrawAmount);
         account.persist();
 

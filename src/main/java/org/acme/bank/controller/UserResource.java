@@ -29,13 +29,12 @@ public class UserResource {
 
     @POST
     @Transactional
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser (CreateUserRequest userRequest) {
 
         User user = userService.createUser(userRequest);
-        String successMessage = "Usuário criado com sucesso! \n" + user.toString();
-        return Response.ok(user).entity(successMessage).build();
+        return Response.ok(user).build();
     }
 
     @POST
@@ -81,7 +80,7 @@ public class UserResource {
     @Transactional
     @Path("withdraw")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response withdraw(WithdrawRequest withdrawRequest){
         try {
             String result = accountService.withdraw(withdrawRequest);
@@ -100,7 +99,7 @@ public class UserResource {
     @GET
     @Path("details")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response listUser(DetailsRequest detailsRequest){
+    public Response details(DetailsRequest detailsRequest){
         try{
             AccountResponse accountResponse = accountService.details(detailsRequest);
             return Response.ok(accountResponse).build();

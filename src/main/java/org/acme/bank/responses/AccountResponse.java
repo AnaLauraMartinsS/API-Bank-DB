@@ -8,6 +8,7 @@ import org.acme.bank.dao.User;
 @Setter
 @Getter
 @NoArgsConstructor
+
 public class AccountResponse {
     private Long id;
     private String typeAccount;
